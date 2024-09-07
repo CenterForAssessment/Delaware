@@ -38,6 +38,9 @@ Delaware_Data_LONG[,YEAR:=as.character(YEAR)]
 Delaware_Data_LONG[,ID:=as.character(ID)]
 Delaware_Data_LONG[,GRADE:=as.character(GRADE)]
 Delaware_Data_LONG[,ACHIEVEMENT_LEVEL:=paste("Level", ACHIEVEMENT_LEVEL)]
+Delaware_Data_LONG[,SCHOOL_ENROLLMENT_STATUS:="Enrolled School: Yes"]
+Delaware_Data_LONG[,DISTRICT_ENROLLMENT_STATUS:="Enrolled District: Yes"]
+Delaware_Data_LONG[,STATE_ENROLLMENT_STATUS:="Enrolled State: Yes"]
 
 ### Save result
 save(Delaware_Data_LONG, file="Data/Delaware_Data_LONG.Rdata")
