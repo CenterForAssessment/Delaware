@@ -38,4 +38,4 @@ Delaware_SGP <- abcSGP(
                     parallel.config=parallel.config)
 
 ### Save results
-#save(Delaware_SGP, file="Data/Delaware_SGP.Rdata")
+save(Delaware_SGP, file="Data/Delaware_SGP.Rdata")
