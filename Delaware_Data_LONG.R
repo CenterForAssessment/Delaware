@@ -7,9 +7,15 @@
 ### Load packages
 require(data.table)
 
-
 ### Load data
 Delaware_Data_WIDE <- fread("Data/Base_Files/Delaware_Data_LONG.csv")
+load("Data/Base_Files/SBAC_csem_data.Rdata")
+
+### Utility functions 
+getDecile <- function(x) {
+  # Return the decile rank as a numeric vector
+  ceiling(10 * frank(x, ties.method = "average") / length(x))
+}
 
 ### Tidy up data
 old.names <- c("SchoolYear", "StudentID", "DistrictCode", "DistrictName", "SchoolCode", "SchoolName", "RaceEDEN", "Grade", "SWD", "ELL", "LowIncome", "ELAScaleScore", "ELAPL", "MathScaleScore", "MathPL", "ELAGrowthEligible", "MathGrowthEligible")
@@ -41,6 +47,14 @@ Delaware_Data_LONG[,ACHIEVEMENT_LEVEL:=paste("Level", ACHIEVEMENT_LEVEL)]
 Delaware_Data_LONG[,SCHOOL_ENROLLMENT_STATUS:="Enrolled School: Yes"]
 Delaware_Data_LONG[,DISTRICT_ENROLLMENT_STATUS:="Enrolled District: Yes"]
 Delaware_Data_LONG[,STATE_ENROLLMENT_STATUS:="Enrolled State: Yes"]
+
+### Merge in CSEMs
+Delaware_Data_LONG[,SCALE_SCORE_DECILE:=getDecile(SCALE_SCORE), keyby=c("YEAR", "CONTENT_AREA", "GRADE")]
+Delaware_Data_LONG <- SBAC_csem_data[Delaware_Data_LONG, on=key(SBAC_csem_data)]
+
+### Tidy up columns 
+first.columns <- c("VALID_CASE", "CONTENT_AREA", "YEAR", "GRADE", "ID", "SCALE_SCORE", "ACHIEVEMENT_LEVEL")
+setcolorder(Delaware_Data_LONG, c(first.columns, setdiff(names(Delaware_Data_LONG), first.columns)))
 
 ### Save result
 save(Delaware_Data_LONG, file="Data/Delaware_Data_LONG.Rdata")
